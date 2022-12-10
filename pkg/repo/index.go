@@ -18,6 +18,7 @@ package repo
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -102,8 +103,18 @@ func NewIndexFile() *IndexFile {
 	}
 }
 
+var indexCache = map[string]*IndexFile{}
+
 // LoadIndexFile takes a file at the given path and returns an IndexFile object
 func LoadIndexFile(path string) (*IndexFile, error) {
+	fmt.Printf("Loading index file for %s\n", path)
+	fmt.Printf("Cache: %+v\n", indexCache)
+	if _, ok := indexCache[path]; ok {
+		println("Cache hit!")
+		return indexCache[path], nil
+	}
+
+	// println("Cache miss!")
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
@@ -112,6 +123,8 @@ func LoadIndexFile(path string) (*IndexFile, error) {
 	if err != nil {
 		return nil, errors.Wrapf(err, "error loading %s", path)
 	}
+
+	indexCache[path] = i
 	return i, nil
 }
 

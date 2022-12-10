@@ -390,12 +390,17 @@ func pickChartRepositoryConfigByName(name string, cfgs []*repo.Entry) (*repo.Ent
 func (c *ChartDownloader) scanReposForURL(u string, rf *repo.File) (*repo.Entry, error) {
 	// FIXME: This is far from optimal. Larger installations and index files will
 	// incur a performance hit for this type of scanning.
+	fmt.Println("WTF I AM SCANNING REPOS")
 	for _, rc := range rf.Repositories {
+		fmt.Println("Repo?")
 		r, err := repo.NewChartRepository(rc, c.Getters)
 		if err != nil {
 			return nil, err
 		}
 
+		fmt.Println("Feckerino")
+		fmt.Println(r.Config.Name)
+		fmt.Println("Eeshk")
 		idxFile := filepath.Join(c.RepositoryCache, helmpath.CacheIndexFile(r.Config.Name))
 		i, err := repo.LoadIndexFile(idxFile)
 		if err != nil {
